@@ -3,6 +3,7 @@ import "./globals.css";
 
 import HomePage from "@/component/HomePage";
 import Authprovider from "@/component/authprovider/Authprovider";
+import Footer from "@/component/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,7 @@ export default function RootLayout({ children }) {
         <main>
            {children}
         </main>
-               <footer></footer>
+               <footer> <Footer></Footer></footer>
         </Authprovider>
        </body>
     </html>
