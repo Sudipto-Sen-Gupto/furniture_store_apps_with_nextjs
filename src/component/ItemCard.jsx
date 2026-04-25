@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Star } from "lucide-react"
+import Link from "next/link"
 
 
 const ItemCard = ({datum}) => {
@@ -50,10 +51,8 @@ const ItemCard = ({datum}) => {
 
       {/* Footer */}
       <CardFooter className="p-4 pt-0 flex gap-2">
-        <Button className="w-full">Add to Cart</Button>
-        <Button variant="outline" className="w-full">
-          View
-        </Button>
+       <Link href={`/products/${item.id}`} className="w-full"><Button className="w-full" >View Details</Button></Link> 
+        
       </CardFooter>
 
     </Card>

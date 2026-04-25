@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, EyeOff, Home } from "lucide-react";
+import { useRouter } from "next/navigation";
 import pic1 from "../../picture/pic1.avif";
 
 import UseAuthContext from "@/component/useAuthContext/UseAuthContext";
@@ -10,6 +11,7 @@ import { useState } from "react";
 
 export default function RegisterPage() {
   const { signUpWithUser, signUpWithGoogle } = UseAuthContext();
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +35,9 @@ export default function RegisterPage() {
     signUpWithUser(email, password)
       .then((res) => {
         console.log("User created:", res.user);
+
+        // 🚀 Redirect to home page after success
+        router.push("/");
       })
       .catch((err) => {
         setError(err.message);
@@ -54,7 +59,7 @@ export default function RegisterPage() {
       {/* 🔥 Card */}
       <div className="bg-white shadow-xl rounded-2xl flex overflow-hidden w-[900px]">
 
-        {/* 🖼 Image Section */}
+        {/* 🖼 Image */}
         <div className="hidden md:block w-1/2 relative">
           <Image
             src={pic1}
@@ -64,11 +69,13 @@ export default function RegisterPage() {
           />
         </div>
 
-        {/* 📋 Form Section */}
+        {/* 📋 Form */}
         <div className="w-full md:w-1/2 p-8 space-y-5">
+
           <h2 className="text-2xl font-bold text-center">
             Create Account 🚀
           </h2>
+
           <p className="text-sm text-gray-500 text-center">
             Start your journey with us
           </p>
@@ -83,7 +90,7 @@ export default function RegisterPage() {
               className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
-            {/* Password with toggle */}
+            {/* Password */}
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -128,6 +135,7 @@ export default function RegisterPage() {
               Login
             </Link>
           </p>
+
         </div>
       </div>
     </div>
