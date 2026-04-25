@@ -1,21 +1,23 @@
-"use client"
+"use client";
 
-import Link from "next/link"
+import Link from "next/link";
 import {
   Menubar,
   MenubarMenu,
   MenubarTrigger,
   MenubarContent,
   MenubarItem,
-} from "@/components/ui/menubar"
+} from "@/components/ui/menubar";
 
-import { cn } from "@/lib/utils"
+import UseAuthContext from "./useAuthContext/UseAuthContext";
 
 export default function Navbar() {
+  const { user, logOut } = UseAuthContext();
+
   return (
     <div className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-        
+
         {/* Logo */}
         <Link
           href="/"
@@ -66,24 +68,47 @@ export default function Navbar() {
 
         </Menubar>
 
-        {/* Right side CTA */}
-        <div className="hidden md:flex gap-3">
-          <Link
-            href="/login"
-            className="px-4 py-2 rounded-full border hover:bg-gray-100 transition"
-          >
-            Login
-          </Link>
+        {/* Right side AUTH UI */}
+        <div className="flex items-center gap-3">
 
-          <Link
-            href="/signup"
-            className="px-4 py-2 rounded-full bg-black text-white hover:bg-gray-800 transition"
-          >
-            Sign Up
-          </Link>
+          {/* 👤 IF USER LOGGED IN */}
+          {user ? (
+            <div className="flex items-center gap-3">
+
+              {/* Email */}
+              <span className="text-sm text-gray-700 hidden md:block">
+                {user.email}
+              </span>
+
+              {/* Logout Button */}
+              <button
+                onClick={logOut}
+                className="px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* 🔓 IF NOT LOGGED IN */}
+              <Link
+                href="/login"
+                className="px-4 py-2 rounded-full border hover:bg-gray-100 transition"
+              >
+                Login
+              </Link>
+
+              <Link
+                href="/signup"
+                className="px-4 py-2 rounded-full bg-black text-white hover:bg-gray-800 transition"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
+
         </div>
-
       </div>
     </div>
-  )
+  );
 }
