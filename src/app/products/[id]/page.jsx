@@ -1,20 +1,46 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { furnitureData } from "@/data";
 import { Star } from "lucide-react";
 
-export default async function Page({ params }) {
-  const { id } = await params;
+import UseAuthContext from "@/component/useAuthContext/UseAuthContext";
+import { furnitureData } from "@/data";
 
-  const product = furnitureData.find(
-    (item) => item.id === Number(id)
-  );
+export default function Page({ params }) {
+  const router = useRouter();
+  const { user, loader } = UseAuthContext();
 
-  if (!product) {
+  const [product, setProduct] = useState(null);
+
+  // 🔥 async function inside useEffect
+  useEffect(() => {
+    const loadProduct = async () => {
+      const { id } = await params;
+
+      const foundProduct = furnitureData.find(
+        (item) => item.id === Number(id)
+      );
+
+      setProduct(foundProduct);
+    };
+
+    loadProduct();
+  }, [params]);
+
+  // 🔐 Private route check
+  useEffect(() => {
+    if (!loader && !user) {
+      router.push("/login");
+    }
+  }, [user, loader, router]);
+
+  // ⏳ loading state
+  if (loader || !product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <h1 className="text-2xl font-bold text-red-500">
-          Product not found
-        </h1>
+        Loading...
       </div>
     );
   }
@@ -24,7 +50,7 @@ export default async function Page({ params }) {
 
       <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden grid md:grid-cols-2">
 
-        {/* 🖼 Image Section */}
+        {/* Image */}
         <div className="relative w-full h-[400px] md:h-full">
           <Image
             src={product.image}
@@ -32,51 +58,31 @@ export default async function Page({ params }) {
             fill
             className="object-cover"
           />
-
-          {/* Badge */}
-          <span className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-xs">
-            {product.necessity_sector}
-          </span>
         </div>
 
-        {/* 📋 Content Section */}
-        <div className="p-6 md:p-10 space-y-5">
+        {/* Content */}
+        <div className="p-8 space-y-5">
 
-          {/* Name */}
-          <h1 className="text-3xl font-bold text-gray-800">
-            {product.name}
-          </h1>
+          <h1 className="text-3xl font-bold">{product.name}</h1>
 
-          {/* ID */}
-          <p className="text-sm text-gray-500">
-            Product ID: #{product.id}
-          </p>
+          <p className="text-gray-500">{product.necessity_sector}</p>
+
+          <p className="text-gray-600">{product.description}</p>
 
           {/* Rating */}
-          <div className="flex items-center gap-2">
-            <div className="flex text-yellow-500">
-              {Array.from({ length: Math.round(product.rating) }).map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-yellow-500" />
-              ))}
-            </div>
-
-            <span className="text-sm text-gray-600">
-              ({product.rating})
-            </span>
+          <div className="flex text-yellow-500">
+            {Array.from({ length: Math.round(product.rating) }).map((_, i) => (
+              <Star key={i} className="w-4 h-4 fill-yellow-500" />
+            ))}
           </div>
-
-          {/* Description */}
-          <p className="text-gray-600 leading-relaxed">
-            {product.description}
-          </p>
 
           {/* Price */}
           <div className="text-2xl font-bold text-indigo-600">
             ${product.price}
           </div>
 
-          {/* Booking Button */}
-          <button className="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold hover:opacity-90 transition">
+          {/* Button */}
+          <button className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700">
             Book Now
           </button>
 
